@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://outlet-premium-lavras.duducraft11.chatgpt.site/sitemap.xml
