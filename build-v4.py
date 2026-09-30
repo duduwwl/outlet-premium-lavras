@@ -59,6 +59,7 @@ for route in ("", "catalogo", "checkout", "admin"):
     elif route == "admin":
         page = page.replace('<div id="order-list" class="order-list"></div>', '<div id="order-list" class="order-list"></div><section class="inventory-admin"><h2>Estoque fictício</h2><p>Quantidades usadas somente na demonstração deste navegador.</p><div id="inventory-list"></div></section>')
     page = page.replace('Fotos de referência. Disponibilidade e valores sob confirmação da loja.', 'Fotos de referência. Preços e estoque são fictícios.')
+    page = page.replace('<strong>Explore</strong>', '<strong>Páginas</strong>')
     prefix = "./" if route == "" else "../"
     page = page.replace('href="/', 'href="' + prefix).replace('src="/', 'src="' + prefix)
     file.write_text(page, encoding="utf-8")

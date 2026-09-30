@@ -2,12 +2,23 @@
 
 Site estático de demonstração da Outlet Premium Lavras, com páginas de início, catálogo, sacola/checkout e administração.
 
+**GitHub Pages:** a publicação usa a branch `main`, pasta `/docs`. As quatro páginas abaixo pertencem ao mesmo site e têm endereços próprios.
+
 ## Páginas
 
 - [Início](https://duduwwl.github.io/outlet-premium-lavras/)
 - [Catálogo](https://duduwwl.github.io/outlet-premium-lavras/catalogo/)
 - [Sacola e checkout](https://duduwwl.github.io/outlet-premium-lavras/checkout/)
 - [Painel administrativo demonstrativo](https://duduwwl.github.io/outlet-premium-lavras/admin/)
+
+O catálogo e a sacola estão no cabeçalho. O painel também pode ser aberto pelo link “Área administrativa” no rodapé de qualquer página. O checkout e o painel são páginas públicas, mas têm `noindex` para não aparecerem em resultados de busca; isso não impede o acesso pelos links acima.
+
+## Estrutura
+
+- `dist/`: versão publicada no endereço original do site.
+- `docs/`: versão publicada pelo GitHub Pages, com URLs relativas ao caminho `/outlet-premium-lavras/`.
+- `build-v4.py`: gera as quatro páginas em `dist/`.
+- `build-github-pages.py`: copia `dist/` para `docs/` e ajusta `robots.txt` e `sitemap.xml` para o domínio do GitHub Pages.
 
 ## Executar localmente
 
