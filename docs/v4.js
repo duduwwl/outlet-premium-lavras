@@ -125,6 +125,7 @@ function initCheckout(){
     const stock=getStock(),cart=getCart();
     $('#cart-empty').hidden=cart.length>0;
     form.hidden=cart.length===0;
+    $('.summary').hidden=cart.length===0;
     cartItems.innerHTML=cart.map(item=>{const p=productById(item.id);if(!p)return '';
       return '<div class="cart-item"><div class="cart-thumb">'+imageMarkup(p)+'</div><div><h3>'+escapeHTML(p.name)+'</h3><p>Tamanho '+escapeHTML(item.size)+' · Estoque fictício: '+stock[p.id]+'</p><p class="cart-price">'+money(p.price * item.qty)+'</p><div class="cart-qty"><button type="button" data-action="minus" data-id="'+p.id+'" data-size="'+escapeHTML(item.size)+'" aria-label="Reduzir quantidade">−</button><span>'+item.qty+'</span><button type="button" data-action="plus" data-id="'+p.id+'" data-size="'+escapeHTML(item.size)+'" aria-label="Aumentar quantidade">+</button></div></div><button type="button" class="remove-item" data-action="remove" data-id="'+p.id+'" data-size="'+escapeHTML(item.size)+'">Remover</button></div>'}).join('');
     $('#summary-items').innerHTML=cart.map(item=>{const p=productById(item.id);return p?'<div class="summary-item"><span>'+item.qty+' × '+escapeHTML(p.name)+' · '+escapeHTML(item.size)+'</span><strong>'+money(p.price*item.qty)+'</strong></div>':''}).join('');
@@ -166,12 +167,15 @@ function initCheckout(){
     if(delivery&&shipping===null){message.textContent='Calcule a taxa fictícia de entrega ou escolha retirada na loja.';return}
     const orderId='OP-'+Date.now().toString().slice(-7),total=totalCart(cart)+(delivery?shipping:0);
     const lines=cart.map(item=>item.qty+' × '+productById(item.id).name+' · '+item.size);
+    const customerName=form.elements.name.value.trim(),phone=form.elements.phone.value.trim(),email=form.elements.email.value.trim();
+    const address=delivery?[form.elements.street.value.trim()+', '+form.elements.number.value.trim(),form.elements.extra.value.trim(),form.elements.district.value.trim(),form.elements.city.value.trim(),form.elements.zip.value.trim()].filter(Boolean).join(' · '):'';
+    const payment=form.elements.payment.value;
+    const text=['Olá, montei o pedido '+orderId+' no catálogo de demonstração da Outlet Premium.','Itens: '+lines.join('; ')+'.','Total fictício: '+money(total)+'.',delivery?'Entrega simulada: '+address+'. Taxa estimada: '+money(shipping)+'.':'Retirada na loja.','Preferência de pagamento: '+payment+'.','Nome: '+customerName+'. WhatsApp: '+phone+'. E-mail: '+email+'.','Gostaria de confirmar preço, estoque e entrega reais.'].join('\n');
     const order={id:orderId,customer:form.elements.name.value.trim().split(/\s+/)[0].slice(0,40)||'Cliente',items:lines,fulfillment:delivery?'Entrega (simulação)':'Retirada na loja',payment:form.elements.payment.value,total,status:'Novo',date:new Date().toLocaleString('pt-BR')};
     const orders=getOrders();orders.unshift(order);setOrders(orders);
     cart.forEach(item=>stock[item.id]=Math.max(0,stock[item.id]-item.qty));setStock(stock);
     setCart([]);render();form.reset();shipping=null;updateFulfillment();
-    const text='Olá, montei o pedido '+orderId+' no catálogo de demonstração da Outlet Premium. Itens: '+lines.join('; ')+'. Total fictício: '+money(total)+'. Gostaria de confirmar preço, estoque e entrega reais.';
-    message.innerHTML='Pedido <strong>'+orderId+'</strong> registrado nesta demonstração. Total fictício: <strong>'+money(total)+'</strong>. Nenhum pagamento foi feito. <a class="text-link" target="_blank" rel="noopener noreferrer" href="https://wa.me/5535997687127?text='+encodeURIComponent(text)+'">Confirmar pelo WhatsApp</a>.';
+    message.innerHTML='Pedido <strong>'+orderId+'</strong> registrado nesta demonstração. Total fictício: <strong>'+money(total)+'</strong>. Nenhum pagamento foi feito. Seus dados de contato e endereço não foram salvos no painel. <a class="text-link" target="_blank" rel="noopener noreferrer" href="https://wa.me/5535997687127?text='+encodeURIComponent(text)+'">Enviar dados e confirmar pelo WhatsApp</a>.';
     message.scrollIntoView({behavior:'smooth',block:'center'});
   });
   render();
@@ -196,3 +200,4 @@ function initAdmin(){
   $('#reset-demo').addEventListener('click',()=>{localStorage.removeItem('outlet-v4-orders');localStorage.removeItem('outlet-v4-stock');render()});
 }
 document.addEventListener('DOMContentLoaded',()=>{initCommon();const page=document.body.dataset.page;if(page==='home')initCarousel();if(page==='catalog')initCatalog();if(page==='checkout')initCheckout();if(page==='admin')initAdmin()});
+

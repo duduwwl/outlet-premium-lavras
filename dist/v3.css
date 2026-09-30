@@ -72,3 +72,6 @@ body{font-size:14px}
 @media(prefers-reduced-motion:reduce){.hero-slide{transition:none}}
 .crop-jeans-dark{--crop-top:-48.8%}
 .crop-jeans-varied,.crop-jacket{--crop-top:-155%}
+.summary[hidden]{display:none}
+@media(max-width:720px){.checkout-layout{flex-direction:column}}
+
