@@ -60,6 +60,10 @@ for route in ("", "catalogo", "checkout", "admin"):
         page = page.replace('<div id="order-list" class="order-list"></div>', '<div id="order-list" class="order-list"></div><section class="inventory-admin"><h2>Estoque fictício</h2><p>Quantidades usadas somente na demonstração deste navegador.</p><div id="inventory-list"></div></section>')
     page = page.replace('Fotos de referência. Disponibilidade e valores sob confirmação da loja.', 'Fotos de referência. Preços e estoque são fictícios.')
     page = page.replace('<strong>Explore</strong>', '<strong>Páginas</strong>')
+    # Keep both destinations, but place the map with the page links and the
+    # demonstration admin entry beside the store address as requested.
+    page = page.replace('<a href="/admin/">Área administrativa</a>', '<a href="https://www.google.com/maps/search/?api=1&query=Rua+Doutor+Alvaro+Botelho+188+Lavras+MG">Abrir mapa</a>')
+    page = page.replace('<p>Rua Doutor Álvaro Botelho, 188<br>Centro · Lavras, MG</p><a href="https://www.google.com/maps/search/?api=1&query=Rua+Doutor+Alvaro+Botelho+188+Lavras+MG">Abrir mapa</a>', '<p>Rua Doutor Álvaro Botelho, 188<br>Centro · Lavras, MG</p><a href="/admin/">Área administrativa</a>')
     prefix = "./" if route == "" else "../"
     page = page.replace('href="/', 'href="' + prefix).replace('src="/', 'src="' + prefix)
     file.write_text(page, encoding="utf-8")
