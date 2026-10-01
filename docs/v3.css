@@ -137,3 +137,5 @@ body{font-size:14px}
   .footer-inner>div:first-child{grid-column:auto}
 }
 
+.store h2{font-size:clamp(2rem,3.2vw,3.4rem);line-height:1.12;max-width:590px}
+@media(max-width:720px){.store h2{font-size:clamp(2rem,6vw,2.7rem)}}
