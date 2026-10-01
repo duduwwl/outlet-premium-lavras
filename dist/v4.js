@@ -1,4 +1,4 @@
-const scriptUrl = document.querySelector('script[src$="v4.js"]').src;
+const scriptUrl = document.currentScript?.src || document.querySelector('script[src*="v4.js"]')?.src || location.href;
 const asset = path => path.startsWith('http') ? path : new URL(path.replace(/^\//, ''), scriptUrl).href;
 const money = cents => new Intl.NumberFormat('pt-BR', {style:'currency',currency:'BRL'}).format(cents / 100);
 const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -126,6 +126,7 @@ function initCheckout(){
     $('#cart-empty').hidden=cart.length>0;
     form.hidden=cart.length===0;
     $('.summary').hidden=cart.length===0;
+    $('.checkout-layout').classList.toggle('is-empty',cart.length===0);
     cartItems.innerHTML=cart.map(item=>{const p=productById(item.id);if(!p)return '';
       return '<div class="cart-item"><div class="cart-thumb">'+imageMarkup(p)+'</div><div><h3>'+escapeHTML(p.name)+'</h3><p>Tamanho '+escapeHTML(item.size)+' · Estoque fictício: '+stock[p.id]+'</p><p class="cart-price">'+money(p.price * item.qty)+'</p><div class="cart-qty"><button type="button" data-action="minus" data-id="'+p.id+'" data-size="'+escapeHTML(item.size)+'" aria-label="Reduzir quantidade">−</button><span>'+item.qty+'</span><button type="button" data-action="plus" data-id="'+p.id+'" data-size="'+escapeHTML(item.size)+'" aria-label="Aumentar quantidade">+</button></div></div><button type="button" class="remove-item" data-action="remove" data-id="'+p.id+'" data-size="'+escapeHTML(item.size)+'">Remover</button></div>'}).join('');
     $('#summary-items').innerHTML=cart.map(item=>{const p=productById(item.id);return p?'<div class="summary-item"><span>'+item.qty+' × '+escapeHTML(p.name)+' · '+escapeHTML(item.size)+'</span><strong>'+money(p.price*item.qty)+'</strong></div>':''}).join('');
